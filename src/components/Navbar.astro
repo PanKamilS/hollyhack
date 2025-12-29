@@ -8,17 +8,19 @@ const blog = isPL ? "/pl/blog" : "/blog";
 const about = isPL ? "/pl/about" : "/about";
 ---
 
-<header class="flex items-center justify-between">
-  <a href={home} class="font-semibold tracking-tight text-lg">
-    hollyhack
-  </a>
+<div class="mx-auto max-w-5xl px-5">
+  <header class="flex items-center justify-between py-6">
+    <a href={home} class="font-semibold tracking-tight text-lg">
+      hollyhack
+    </a>
 
-  <nav class="flex items-center gap-4">
-    <a href={blog} class="text-sm opacity-80 hover:opacity-100">Blog</a>
-    <a href={about} class="text-sm opacity-80 hover:opacity-100">About</a>
-    <LangSwitch />
-    <ThemeToggle />
-  </nav>
-</header>
+    <nav class="flex items-center gap-4">
+      <a href={blog} class="text-sm opacity-80 hover:opacity-100">Blog</a>
+      <a href={about} class="text-sm opacity-80 hover:opacity-100">About</a>
+      <LangSwitch />
+      <ThemeToggle />
+    </nav>
+  </header>
 
-<div class="mt-6 border-b border-zinc-200 dark:border-zinc-800"></div>
+  <div class="border-b border-zinc-200 dark:border-zinc-800"></div>
+</div>

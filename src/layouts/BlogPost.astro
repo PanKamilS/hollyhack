@@ -4,7 +4,18 @@ import Navbar from "../components/Navbar.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import { getCollection } from "astro:content";
 
-const { title, description, pubDate, lang = "en", tags = [], translationKey } = Astro.props;
+const {
+  title,
+  description,
+  pubDate,
+  lang = "en",
+  tags = [],
+  translationKey,
+  headings = [],
+} = Astro.props;
+
+// tylko h2 + h3
+const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 
 // znajdź tłumaczenie jeśli jest
 let translatedUrl = null;
@@ -12,60 +23,113 @@ let translatedUrl = null;
 if (translationKey) {
   const all = await getCollection("blog");
   const otherLang = lang === "en" ? "pl" : "en";
-  const match = all.find((p) => p.data.translationKey === translationKey && (p.data.lang ?? "en") === otherLang && !p.data.draft);
-  if (match) translatedUrl = otherLang === "pl" ? `/pl/blog/${match.slug}` : `/blog/${match.slug}`;
+  const match = all.find(
+    (p) =>
+      p.data.translationKey === translationKey &&
+      (p.data.lang ?? "en") === otherLang &&
+      !p.data.draft
+  );
+  if (match) {
+    translatedUrl =
+      otherLang === "pl" ? `/pl/blog/${match.slug}` : `/blog/${match.slug}`;
+  }
 }
 ---
 
-<BaseLayout title={`${title} — HollyHack`} lang={lang} description={description ?? ""}>
+<BaseLayout title={`${title} — HollyHack`} lang={lang} description={description ?? ""} wide={true}>
   <Navbar />
+    <div class="mt-10 grid gap-10 lg:grid-cols-[240px_1fr]">
+      <!-- TOC DESKTOP -->
+      <aside class="hidden lg:block">
+        {toc.length > 0 && (
+          <div class="sticky top-24 rounded-xl border border-zinc-200 p-4 text-sm dark:border-zinc-800">
+            <p class="mb-3 font-semibold text-zinc-900 dark:text-zinc-100">
+              {lang === "pl" ? "Na tej stronie" : "On this page"}
+            </p>
 
-  <article class="mt-10">
-    <header class="space-y-4">
-      <div class="flex items-center justify-between gap-4 flex-wrap">
-        <p class="text-sm text-zinc-500 dark:text-zinc-400">
-          <FormattedDate date={pubDate} />
-        </p>
-
-        {translatedUrl && (
-          <a
-            href={translatedUrl}
-            class="text-sm rounded-lg border border-zinc-200 px-3 py-2 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
-          >
-            {lang === "en" ? "Read in Polish →" : "Czytaj po angielsku →"}
-          </a>
+            <ul class="space-y-2">
+              {toc.map((h) => (
+                <li class={h.depth === 3 ? "pl-4" : ""}>
+                  <a
+                    href={`#${h.slug}`}
+                    class="block leading-snug text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white"
+                  >
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
-      </div>
+      </aside>
 
-      <h1 class="text-4xl font-bold tracking-tight">{title}</h1>
+      <!-- CONTENT -->
+      <article>
+        <header class="space-y-4">
+          <div class="flex items-center justify-between gap-4 flex-wrap">
+            <p class="text-sm text-zinc-500 dark:text-zinc-400">
+              <FormattedDate date={pubDate} />
+            </p>
 
-      {description && (
-        <p class="text-lg text-zinc-600 dark:text-zinc-300">{description}</p>
-      )}
+            {translatedUrl && (
+              <a
+                href={translatedUrl}
+                class="text-sm rounded-lg border border-zinc-200 px-3 py-2 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
+              >
+                {lang === "en" ? "Read in Polish →" : "Czytaj po angielsku →"}
+              </a>
+            )}
+          </div>
 
-      {tags?.length > 0 && (
-        <ul class="flex flex-wrap gap-2 pt-2">
-          {tags.map((t) => (
-            <li class="text-xs rounded-full border border-zinc-200 px-3 py-1 dark:border-zinc-800">
-              #{t}
-            </li>
-          ))}
-        </ul>
-      )}
-    </header>
+          <h1 class="text-4xl font-bold tracking-tight">{title}</h1>
 
-    <div class="mt-10 prose prose-zinc dark:prose-invert max-w-none">
-      <slot />
+          {description && (
+            <p class="text-lg text-zinc-600 dark:text-zinc-300">{description}</p>
+          )}
+
+          {tags?.length > 0 && (
+            <ul class="flex flex-wrap gap-2 pt-2">
+              {tags.map((t) => (
+                <li class="text-xs rounded-full border border-zinc-200 px-3 py-1 dark:border-zinc-800">
+                  #{t}
+                </li>
+              ))}
+            </ul>
+          )}
+        </header>
+
+        <!-- TOC MOBILE -->
+        {toc.length > 0 && (
+          <details class="lg:hidden mt-8 rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
+            <summary class="cursor-pointer font-semibold">
+              {lang === "pl" ? "Sekcje" : "Sections"}
+            </summary>
+
+            <ul class="mt-3 space-y-2 text-sm">
+              {toc.map((h) => (
+                <li class={h.depth === 3 ? "pl-4" : ""}>
+                  <a href={`#${h.slug}`} class="hover:underline">
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
+
+        <div class="mt-10 prose prose-zinc dark:prose-invert max-w-none">
+          <slot />
+        </div>
+
+        <div class="mt-12">
+          <a
+            href={lang === "pl" ? "/pl/blog" : "/blog"}
+            class="text-sm text-zinc-600 hover:underline dark:text-zinc-300"
+          >
+            ← {lang === "pl" ? "Wróć do bloga" : "Back to blog"}
+          </a>
+        </div>
+      </article>
     </div>
-
-    <div class="mt-12">
-      <a
-        href={lang === "pl" ? "/pl/blog" : "/blog"}
-        class="text-sm text-zinc-600 hover:underline dark:text-zinc-300"
-      >
-        ← {lang === "pl" ? "Wróć do bloga" : "Back to blog"}
-      </a>
-    </div>
-  </article>
+  </div>
 </BaseLayout>
-

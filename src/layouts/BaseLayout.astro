@@ -6,7 +6,12 @@ const {
   title = "HollyHack",
   lang = "en",
   description = "Security notes, labs write-ups, and practical walkthroughs.",
+  wide = false,
 } = Astro.props;
+
+const containerClass = wide
+  ? "mx-auto max-w-5xl px-5 py-6"
+  : "mx-auto max-w-3xl px-5 py-6";
 ---
 
 <!doctype html>
@@ -19,13 +24,13 @@ const {
   </head>
 
   <body class="min-h-screen antialiased transition-colors duration-300">
-    <div class="mx-auto max-w-3xl px-5 py-6">
+    <div class={containerClass}>
       <slot />
       <footer class="mt-16 border-t border-zinc-200 dark:border-zinc-800 pt-6 text-sm text-zinc-500 dark:text-zinc-400">
         © {new Date().getFullYear()} HollyHack
       </footer>
     </div>
-  <CookieBanner />
-  </body>
 
+    <CookieBanner />
+  </body>
 </html>
