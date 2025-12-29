@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://hollyhack.org/sitemap-index.xml

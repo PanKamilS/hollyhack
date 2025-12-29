@@ -1,14 +1,14 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import Navbar from "../../components/Navbar.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Navbar from "../../../components/Navbar.astro";
 import { getCollection } from "astro:content";
 
 const posts = (await getCollection("blog"))
-  .filter((p) => (p.data.lang ?? "en") === "en" && !p.data.draft)
+  .filter((p) => (p.data.lang ?? "en") === "pl" && !p.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
-<BaseLayout title="Blog — HollyHack" lang="en">
+<BaseLayout title="Blog — HollyHack" lang="pl">
   <Navbar />
 
   <section class="mt-10">
@@ -16,7 +16,7 @@ const posts = (await getCollection("blog"))
       <div>
         <h1 class="text-3xl font-bold tracking-tight">Blog</h1>
         <p class="mt-3 text-zinc-600 dark:text-zinc-300">
-          Security notes, HTB write-ups, and walkthroughs.
+          Notatki security, write-upy HTB i walkthrough.
         </p>
       </div>
     </div>
@@ -25,7 +25,7 @@ const posts = (await getCollection("blog"))
       {posts.map((post) => (
         <li>
           <a
-            href={`/blog/${post.slug}`}
+            href={`/pl/blog/${post.slug}`}
             class="group block rounded-2xl border border-zinc-200 p-5 transition hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
           >
             <div class="flex items-start justify-between gap-4">
@@ -41,7 +41,7 @@ const posts = (await getCollection("blog"))
               </div>
 
               <p class="shrink-0 text-xs text-zinc-500 dark:text-zinc-400 pt-1">
-                {post.data.pubDate.toLocaleDateString("en-GB")}
+                {post.data.pubDate.toLocaleDateString("pl-PL")}
               </p>
             </div>
 
@@ -58,6 +58,13 @@ const posts = (await getCollection("blog"))
         </li>
       ))}
     </ul>
+
+    {posts.length === 0 && (
+      <div class="mt-8 rounded-2xl border border-zinc-200 p-5 dark:border-zinc-800">
+        <p class="text-sm text-zinc-600 dark:text-zinc-300">
+          Brak wpisów po polsku. Dodaj post z <code>lang: pl</code>.
+        </p>
+      </div>
+    )}
   </section>
 </BaseLayout>
-

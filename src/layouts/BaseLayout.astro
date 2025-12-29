@@ -1,0 +1,31 @@
+---
+import "../styles/global.css";
+import CookieBanner from "../components/CookieBanner.astro";
+
+const {
+  title = "HollyHack",
+  lang = "en",
+  description = "Security notes, HTB write-ups, and practical walkthroughs.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang} class="bg-white text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+
+  <body class="min-h-screen antialiased transition-colors duration-300">
+    <div class="mx-auto max-w-3xl px-5 py-6">
+      <slot />
+      <footer class="mt-16 border-t border-zinc-200 dark:border-zinc-800 pt-6 text-sm text-zinc-500 dark:text-zinc-400">
+        © {new Date().getFullYear()} HollyHack
+      </footer>
+    </div>
+  <CookieBanner />
+  </body>
+
+</html>

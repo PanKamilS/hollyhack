@@ -1,0 +1,4 @@
+Contact: pan_kamil.s@pm.me
+Preferred-Languages: en, pl
+Policy: https://hollyhack.org/privacy
+Acknowledgments: https://hollyhack.org/

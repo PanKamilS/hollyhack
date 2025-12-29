@@ -1,0 +1,28 @@
+<button
+  id="theme-toggle"
+  class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 py-2 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800"
+  aria-label="Toggle theme"
+>
+  <span id="theme-icon">🌙</span>
+</button>
+
+<script>
+  const btn = document.getElementById("theme-toggle");
+  const icon = document.getElementById("theme-icon");
+  const root = document.documentElement;
+
+  const apply = (mode) => {
+    root.classList.toggle("dark", mode === "dark");
+    localStorage.setItem("theme", mode);
+    if (icon) icon.textContent = mode === "dark" ? "🌙" : "☀️";
+  };
+
+  const saved = localStorage.getItem("theme");
+  if (saved) apply(saved);
+
+  btn?.addEventListener("click", () => {
+    const next = root.classList.contains("dark") ? "light" : "dark";
+    apply(next);
+  });
+</script>
+
