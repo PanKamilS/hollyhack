@@ -14,10 +14,14 @@ const {
   headings = [],
 } = Astro.props;
 
-// tylko h2 + h3
-const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+const toc = headings
+  .filter((h) => h.depth >= 2 && h.depth <= 3)
+  .filter((h) => /\[toc\]/i.test(h.text))
+  .map((h) => ({
+    ...h,
+    text: h.text.replace(/\[toc\]/ig, "").trim(),
+  }));
 
-// znajdź tłumaczenie jeśli jest
 let translatedUrl = null;
 
 if (translationKey) {
@@ -120,7 +124,11 @@ if (translationKey) {
         <div class="mt-10 prose prose-zinc dark:prose-invert max-w-none">
           <slot />
         </div>
-
+        <script is:inline>
+          for (const el of document.querySelectorAll(".prose h2, .prose h3")) {
+            el.textContent = el.textContent.replace(/\s*\[toc\]\s*/g, "");
+          }
+        </script>
         <div class="mt-12">
           <a
             href={lang === "pl" ? "/pl/blog" : "/blog"}
@@ -131,5 +139,4 @@ if (translationKey) {
         </div>
       </article>
     </div>
-  </div>
 </BaseLayout>

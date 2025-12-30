@@ -1,2 +1,8 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+/* Hide [toc] marker inside rendered headings */
+.prose h1 .toc-marker,
+.prose h2 .toc-marker,
+.prose h3 .toc-marker {
+  display: none;
+}
