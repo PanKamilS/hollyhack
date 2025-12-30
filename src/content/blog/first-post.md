@@ -13,7 +13,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 ## Quisque eget [toc]
 
+
 tincidunt odio, at mattis odio. Etiam consectetur lectus sit amet ante convallis commodo. Integer non nisi vel lacus feugiat feugiat feugiat non purus. Suspendisse potenti. Curabitur blandit sit amet erat at vehicula. Proin finibus et enim vitae tempus. Cras a varius ipsum. Vivamus facilisis erat nibh, ac porta velit fringilla sed. Mauris egestas at quam finibus molestie. Vivamus ac leo ante. Proin quis rutrum eros. Nullam bibendum vestibulum orci, in auctor sem sodales a. Mauris convallis fringilla mauris, eget rhoncus massa pharetra in.
+
+
+![Alt text](../../assets/blog-placeholder-1.jpg)
 
 
 Donec id ex quis erat fringilla tristique vitae non felis. Phasellus posuere molestie nibh, eu fringilla turpis efficitur vel. Vestibulum nec dignissim urna. Nulla facilisis leo sem, non pharetra nisl tempor ut. Suspendisse potenti. Sed luctus vel lorem non feugiat. Mauris eget erat commodo, vehicula ante ac, elementum ante. Curabitur fringilla lobortis dui, eget molestie dui tincidunt sit amet. Vivamus interdum libero fermentum, condimentum dolor id, bibendum magna. Vivamus condimentum nulla erat, mattis porttitor orci dignissim at. Quisque facilisis interdum consequat. Ut viverra hendrerit felis, tincidunt molestie tellus malesuada vitae. Quisque nec risus accumsan, iaculis lorem nec, vulputate magna. Suspendisse potenti. 
