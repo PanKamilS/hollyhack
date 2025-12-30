@@ -1,0 +1,60 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Navbar from "../../components/Navbar.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = (await getCollection("blog"))
+    .filter((p) => (p.data.lang ?? "en") === "en" && !p.data.draft);
+
+  const tags = Array.from(new Set(posts.flatMap((p) => p.data.tags ?? [])));
+
+  return tags.map((tag) => ({ params: { tag } }));
+}
+
+const { tag } = Astro.params;
+
+const posts = (await getCollection("blog"))
+  .filter((p) => (p.data.lang ?? "en") === "en" && !p.data.draft)
+  .filter((p) => (p.data.tags ?? []).includes(tag))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout title={`#${tag} — HollyHack`} lang="en">
+  <Navbar />
+
+  <section class="mt-10">
+    <h1 class="text-3xl font-bold tracking-tight">#{tag}</h1>
+
+    <ul class="mt-8 space-y-4">
+      {posts.map((post) => (
+        <li>
+          <a
+            href={`/blog/${post.slug}`}
+            class="block rounded-2xl border border-zinc-200 p-5 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
+          >
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h2 class="font-semibold">{post.data.title}</h2>
+                {post.data.description && (
+                  <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-300">
+                    {post.data.description}
+                  </p>
+                )}
+              </div>
+              <span class="text-xs text-zinc-500 dark:text-zinc-400">
+                {post.data.pubDate.toLocaleDateString("en-GB")}
+              </span>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <div class="mt-10">
+      <a href="/tags" class="text-sm hover:underline">
+        ← Back to tags
+      </a>
+    </div>
+  </section>
+</BaseLayout>

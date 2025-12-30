@@ -1,0 +1,31 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Navbar from "../../components/Navbar.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog"))
+  .filter((p) => (p.data.lang ?? "en") === "en" && !p.data.draft);
+
+const tags = Array.from(
+  new Set(posts.flatMap((p) => p.data.tags ?? []))
+).sort((a, b) => a.localeCompare(b));
+---
+
+<BaseLayout title="Tags — HollyHack" lang="en">
+  <Navbar />
+
+  <section class="mt-10">
+    <h1 class="text-3xl font-bold tracking-tight">Tags</h1>
+
+    <div class="mt-8 flex flex-wrap gap-2">
+      {tags.map((t) => (
+        <a
+          href={`/tags/${t}`}
+          class="text-sm rounded-full border border-zinc-200 px-3 py-1 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
+        >
+          #{t}
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
