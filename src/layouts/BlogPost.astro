@@ -38,7 +38,7 @@ if (translationKey) {
 
 <BaseLayout title={`${title} — HollyHack`} lang={lang} description={description ?? ""} wide={true}>
   <Navbar />
-    <div class="mt-10 grid gap-10 lg:grid-cols-[240px_1fr]">
+    <div class="mt-10 grid gap-10 lg:grid-cols-[240px_1fr] min-w-0">
       <!-- TOC DESKTOP -->
       <aside class="hidden lg:block">
         {toc.length > 0 && (
@@ -64,7 +64,7 @@ if (translationKey) {
       </aside>
 
       <!-- CONTENT -->
-      <article>
+      <article class="min-w-0">
         <header class="space-y-4">
           <div class="flex items-center justify-between gap-4 flex-wrap">
             <p class="text-sm text-zinc-500 dark:text-zinc-400">
