@@ -4,7 +4,7 @@ description: "Opis rozwiązania krok po kroku jednej z maszyn PG OffSec"
 pubDate: 2025-12-30
 tags: ["OSCP", "OFFSEC PG", "WRITEUP", "WEBPENTEST"]
 lang: pl
-heroImage: '../../assets/blog-placeholder-1.jpg'
+heroImage: '../../assets/pelican_theme.png'
 draft: false
 ---
 
