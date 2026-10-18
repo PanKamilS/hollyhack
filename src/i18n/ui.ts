@@ -7,7 +7,7 @@ export const languages: Record<Lang, string> = {
 
 export const ui = {
   en: {
-    "site.description": "Write-ups of retired Hack The Box machines, study notes and industry news.",
+    "site.description": "Write-ups of retired HTB, TryHackMe and other machines, study notes and cyber news.",
     "nav.blog": "Blog",
     "nav.writeups": "Write-ups",
     "nav.notes": "Notes",
@@ -17,7 +17,7 @@ export const ui = {
     "theme.toggle": "Toggle theme",
     "lang.switch": "Polski",
     "home.topics": "# offensive labs · write-ups · windows & linux · notes & news",
-    "home.lead": "Hands-on walkthroughs of retired Hack The Box machines and what I learn along the way. In English and Polish.",
+    "home.lead": "Hands-on walkthroughs of retired HTB, TryHackMe and other machines, and what I learn along the way. Sometimes cyber news and notes.",
     "home.latest": "Latest posts",
     "home.viewAll": "All posts",
     "list.all": "All",
@@ -50,7 +50,7 @@ export const ui = {
     "footer.cookies": "Cookies",
   },
   pl: {
-    "site.description": "Rozwiązania wycofanych maszyn Hack The Box, notatki z nauki i nowinki z branży.",
+    "site.description": "Rozwiązania wycofanych maszyn z HTB, TryHackMe i innych platform, notatki z nauki i nowinki z cyber.",
     "nav.blog": "Blog",
     "nav.writeups": "Writeupy",
     "nav.notes": "Notatki",
@@ -60,7 +60,7 @@ export const ui = {
     "theme.toggle": "Zmień motyw",
     "lang.switch": "English",
     "home.topics": "# laby ofensywne · writeupy · windows & linux · notatki i nowinki",
-    "home.lead": "Praktyczne rozwiązania wycofanych maszyn Hack The Box i to, czego uczę się po drodze. Po polsku i angielsku.",
+    "home.lead": "Praktyczne rozwiązania wycofanych maszyn z HTB, TryHackMe i innych platform oraz to, czego uczę się po drodze. Czasem nowinki z cyber i notatki.",
     "home.latest": "Najnowsze wpisy",
     "home.viewAll": "Wszystkie wpisy",
     "list.all": "Wszystko",
