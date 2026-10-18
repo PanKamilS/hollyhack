@@ -1,35 +1,98 @@
 ---
 import "../styles/global.css";
 import CookieBanner from "../components/CookieBanner.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import { t, langFromPath, localePath, type Lang } from "../i18n/ui";
 
-const {
-  title = "HollyHack",
-  lang = "en",
-  description = "Security notes, labs write-ups, and practical walkthroughs.",
-  wide = false,
-} = Astro.props;
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: Lang;
+  altHref?: string;
+  image?: string;
+  type?: "website" | "article";
+}
 
-const containerClass = wide
-  ? "mx-auto max-w-5xl px-5 py-6"
-  : "mx-auto max-w-3xl px-5 py-6";
+const lang: Lang = Astro.props.lang ?? langFromPath(Astro.url.pathname);
+const other: Lang = lang === "en" ? "pl" : "en";
+const description = Astro.props.description || t(lang, "site.description");
+const title = Astro.props.title ? `${Astro.props.title} · HollyHack` : "HollyHack";
+
+const path = Astro.url.pathname;
+const neutral = path.replace(/^\/pl(?=\/|$)/, "") || "/";
+const altHref = Astro.props.altHref ?? localePath(other, neutral);
+const hrefs = { [lang]: path, [other]: altHref } as Record<Lang, string>;
+const ogImage = Astro.props.image ? new URL(Astro.props.image, Astro.site) : undefined;
+const year = new Date().getFullYear();
 ---
 
 <!doctype html>
-<html lang={lang} class="bg-white text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(path, Astro.site)} />
+    <link rel="alternate" hreflang="en" href={new URL(hrefs.en, Astro.site)} />
+    <link rel="alternate" hreflang="pl" href={new URL(hrefs.pl, Astro.site)} />
+    <link rel="alternate" hreflang="x-default" href={new URL(hrefs.en, Astro.site)} />
+    <link rel="alternate" type="application/rss+xml" title="HollyHack" href={localePath(lang, "/rss.xml")} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="color-scheme" content="light dark" />
+
+    <meta property="og:site_name" content="HollyHack" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={Astro.props.type ?? "website"} />
+    <meta property="og:url" content={new URL(path, Astro.site)} />
+    <meta property="og:locale" content={lang === "pl" ? "pl_PL" : "en_GB"} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content={ogImage ? "summary_large_image" : "summary"} />
+
+    <script is:inline>
+      // Saved choice wins; otherwise follow the system. Runs before paint to avoid a flash.
+      (function () {
+        var s = null;
+        try { s = localStorage.getItem("theme"); } catch (e) {}
+        var dark = s ? s === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+        document.documentElement.classList.toggle("dark", dark);
+      })();
+    </script>
   </head>
 
-  <body class="min-h-screen antialiased transition-colors duration-300">
-    <div class={containerClass}>
+  <body class="flex min-h-screen flex-col bg-paper font-sans text-ink antialiased">
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-ink focus:px-3 focus:py-2 focus:text-paper">
+      {lang === "pl" ? "Przejdź do treści" : "Skip to content"}
+    </a>
+
+    <SiteHeader altHref={altHref} />
+
+    <main id="main" class="flex-1">
       <slot />
-      <footer class="mt-16 border-t border-zinc-200 dark:border-zinc-800 pt-6 text-sm text-zinc-500 dark:text-zinc-400">
-        © {new Date().getFullYear()} HollyHack
-      </footer>
-    </div>
+    </main>
+
+    <footer class="mt-16 border-t border-line">
+      <div class="mx-auto grid max-w-3xl gap-6 px-4 py-8 text-sm sm:grid-cols-[2fr_1fr_1fr] sm:px-6">
+        <p class="text-muted">{t(lang, "footer.tagline")}</p>
+        <ul class="space-y-1">
+          <li><a class="text-muted hover:text-ink" href={localePath(lang, "/writeups")}>{t(lang, "nav.writeups")}</a></li>
+          <li><a class="text-muted hover:text-ink" href={localePath(lang, "/notes")}>{t(lang, "nav.notes")}</a></li>
+          <li><a class="text-muted hover:text-ink" href={localePath(lang, "/news")}>{t(lang, "nav.news")}</a></li>
+          <li><a class="text-muted hover:text-ink" href={localePath(lang, "/tags")}>{t(lang, "nav.tags")}</a></li>
+        </ul>
+        <ul class="space-y-1">
+          <li><a class="text-muted hover:text-ink" href={localePath(lang, "/about")}>{t(lang, "nav.about")}</a></li>
+          <li><a class="text-muted hover:text-ink" href={localePath(lang, "/rss.xml")}>RSS</a></li>
+          <li><a class="text-muted hover:text-ink" href={localePath(lang, "/privacy")}>{t(lang, "footer.privacy")}</a></li>
+          <li><a class="text-muted hover:text-ink" href={localePath(lang, "/cookies")}>{t(lang, "footer.cookies")}</a></li>
+        </ul>
+      </div>
+      <div class="border-t border-line">
+        <p class="mx-auto max-w-3xl px-4 py-4 font-mono text-xs text-muted sm:px-6">© {year} HollyHack</p>
+      </div>
+    </footer>
 
     <CookieBanner />
   </body>

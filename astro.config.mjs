@@ -8,6 +8,11 @@ import tailwindcss from '@tailwindcss/vite';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://hollyhack.org',
+  devToolbar: { enabled: false },
+
+  markdown: {
+    shikiConfig: { theme: 'min-dark' },
+  },
 
   // 🌍 i18n: EN = / , PL = /pl
   i18n: {

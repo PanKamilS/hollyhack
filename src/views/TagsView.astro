@@ -1,0 +1,35 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { localePath, t, type Lang } from "../i18n/ui";
+import { getPosts, postTags, tagSlug } from "../lib/posts";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const posts = await getPosts(lang);
+// Count by slug so "Linux" and "linux" are one tag.
+const counts = new Map<string, [string, number]>();
+for (const tag of posts.flatMap(postTags)) {
+  const prev = counts.get(tagSlug(tag));
+  counts.set(tagSlug(tag), [prev?.[0] ?? tag, (prev?.[1] ?? 0) + 1]);
+}
+const tags = [...counts.values()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+---
+
+<BaseLayout lang={lang} title={t(lang, "tags.title")}>
+  <div class="mx-auto max-w-3xl px-4 pt-10 sm:px-6">
+    <h1 class="border-b border-line pb-6 text-xl font-semibold">{t(lang, "tags.title")}</h1>
+    {tags.length === 0 && <p class="py-10 text-sm text-muted">{t(lang, "list.empty")}</p>}
+    <ul class="mt-6 flex flex-wrap gap-x-4 gap-y-2 font-mono text-sm">
+      {tags.map(([tag, n]) => (
+        <li>
+          <a href={localePath(lang, `/tags/${tagSlug(tag)}`)} class="underline-offset-4 hover:underline">
+            #{tag.toLowerCase()} <span class="text-muted">({n})</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>

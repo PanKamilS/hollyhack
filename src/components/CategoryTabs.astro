@@ -1,0 +1,27 @@
+---
+import { localePath, t, type Lang } from "../i18n/ui";
+import { CATEGORIES, type Category } from "../lib/posts";
+
+interface Props {
+  lang: Lang;
+  active?: Category | "all";
+}
+
+const { lang, active = "all" } = Astro.props;
+const tabs = [
+  { id: "all", label: t(lang, "list.all"), href: localePath(lang, "/blog") },
+  ...CATEGORIES.map((c) => ({ id: c, label: t(lang, `cat.${c}`), href: localePath(lang, `/${c}`) })),
+];
+---
+
+<nav aria-label={lang === "pl" ? "Kategorie" : "Categories"} class="flex flex-wrap gap-2 font-mono text-xs">
+  {tabs.map((tab) => (
+    <a
+      href={tab.href}
+      aria-current={tab.id === active ? "page" : undefined}
+      class:list={["pill", tab.id === active && "pill-active"]}
+    >
+      {tab.label.toLowerCase()}
+    </a>
+  ))}
+</nav>

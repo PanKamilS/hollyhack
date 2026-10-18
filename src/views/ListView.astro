@@ -1,0 +1,46 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CategoryTabs from "../components/CategoryTabs.astro";
+import PostItem from "../components/PostItem.astro";
+import { t, type Lang } from "../i18n/ui";
+import type { Category, Post } from "../lib/posts";
+
+interface Props {
+  lang: Lang;
+  title: string;
+  lead?: string;
+  eyebrow?: string;
+  posts: Post[];
+  active?: Category | "all";
+  tabs?: boolean;
+  altHref?: string;
+}
+
+const { lang, title, lead, eyebrow, posts, active = "all", tabs = true, altHref } = Astro.props;
+---
+
+<BaseLayout lang={lang} title={title} description={lead} altHref={altHref}>
+  <div class="mx-auto max-w-3xl px-4 pt-10 sm:px-6">
+    <header class="border-b border-line pb-6">
+      <h1 class="text-xl font-semibold">
+        {eyebrow && <span class="font-normal text-muted">{eyebrow} / </span>}{title}
+        <span class="ml-2 font-mono text-xs font-normal text-muted">({posts.length})</span>
+      </h1>
+      {lead && <p class="mt-1 text-sm text-muted">{lead}</p>}
+    </header>
+
+    {tabs && (
+      <div class="mt-6">
+        <CategoryTabs lang={lang} active={active} />
+      </div>
+    )}
+
+    <section class="mt-2">
+      {posts.length > 0 ? (
+        posts.map((post) => <PostItem post={post} showCategory={active === "all"} />)
+      ) : (
+        <p class="py-10 text-sm text-muted">{t(lang, "list.empty")}</p>
+      )}
+    </section>
+  </div>
+</BaseLayout>
