@@ -1,0 +1,51 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { localePath, type Lang } from "../i18n/ui";
+
+// One 404.html serves every missing URL; the script below shows the Polish copy under /pl/.
+const copy: Record<Lang, { title: string; error: string; lead: string; links: [string, string][] }> = {
+  en: {
+    title: "Page not found",
+    error: "No such file or directory",
+    lead: "This address does not exist or the post has moved.",
+    links: [["home", "/"], ["all posts", "/blog"], ["tags", "/tags"]],
+  },
+  pl: {
+    title: "Nie znaleziono strony",
+    error: "Nie ma takiego pliku ani katalogu",
+    lead: "Ten adres nie istnieje albo wpis został przeniesiony.",
+    links: [["strona główna", "/"], ["wszystkie wpisy", "/blog"], ["tagi", "/tags"]],
+  },
+};
+---
+
+<BaseLayout lang="en" title="404">
+  <div class="mx-auto max-w-3xl px-4 pt-10 sm:px-6">
+    {(["en", "pl"] as Lang[]).map((lang) => (
+      <div data-nf-lang={lang} lang={lang} hidden={lang !== "en"}>
+        <section class="rounded-lg border border-line bg-[#0a0a0a] px-5 py-4 font-mono text-sm leading-relaxed text-[#e5e5e5]">
+          <p><span class="text-[#4ade80]">└─</span><span class="text-[#60a5fa]">$</span> cd <span data-nf-path>/</span></p>
+          <p class="text-[#f87171]">bash: cd: <span data-nf-path>/</span>: {copy[lang].error}</p>
+          <p class="mt-2 text-[#8a8a8a]"># 404</p>
+        </section>
+
+        <h1 class="mt-8 text-xl font-semibold">{copy[lang].title}</h1>
+        <p class="mt-2 text-muted">{copy[lang].lead}</p>
+        <nav class="mt-6 flex flex-wrap gap-2 font-mono text-xs">
+          {copy[lang].links.map(([label, href]) => <a class="pill" href={localePath(lang, href)}>{label}</a>)}
+        </nav>
+      </div>
+    ))}
+  </div>
+</BaseLayout>
+
+<script>
+  const path = decodeURIComponent(location.pathname);
+  const lang = path === "/pl" || path.startsWith("/pl/") ? "pl" : "en";
+  document.querySelectorAll<HTMLElement>("[data-nf-lang]").forEach((el) => {
+    el.hidden = el.dataset.nfLang !== lang;
+  });
+  document.querySelectorAll("[data-nf-path]").forEach((el) => (el.textContent = path));
+  document.documentElement.lang = lang;
+  if (lang === "pl") document.title = "Nie znaleziono strony · HollyHack";
+</script>
