@@ -1,142 +1,211 @@
 ---
+import type { MarkdownHeading } from "astro";
 import BaseLayout from "./BaseLayout.astro";
-import Navbar from "../components/Navbar.astro";
-import FormattedDate from "../components/FormattedDate.astro";
-import { getCollection } from "astro:content";
+import { formatDate, localePath, t } from "../i18n/ui";
+import { getPosts, getTranslation, postTags, postUrl, readingMinutes, tagSlug, type Post } from "../lib/posts";
 
-const {
-  title,
-  description,
-  pubDate,
-  lang = "en",
-  tags = [],
-  translationKey,
-  headings = [],
-} = Astro.props;
-
-const toc = headings
-  .filter((h) => h.depth >= 2 && h.depth <= 3)
-  .filter((h) => /\[toc\]/i.test(h.text))
-  .map((h) => ({
-    ...h,
-    text: h.text.replace(/\[toc\]/ig, "").trim(),
-  }));
-
-let translatedUrl = null;
-
-if (translationKey) {
-  const all = await getCollection("blog");
-  const otherLang = lang === "en" ? "pl" : "en";
-  const match = all.find(
-    (p) =>
-      p.data.translationKey === translationKey &&
-      (p.data.lang ?? "en") === otherLang &&
-      !p.data.draft
-  );
-  if (match) {
-    translatedUrl =
-      otherLang === "pl" ? `/pl/blog/${match.slug}` : `/blog/${match.slug}`;
-  }
+interface Props {
+  post: Post;
+  headings: MarkdownHeading[];
 }
+
+const { post, headings } = Astro.props;
+const d = post.data;
+const lang = d.lang;
+const other = lang === "en" ? "pl" : "en";
+
+const translation = await getTranslation(post);
+const siblings = await getPosts(lang);
+const i = siblings.findIndex((p) => p.id === post.id);
+const newer = i > 0 ? siblings[i - 1] : undefined;
+const older = i >= 0 && i < siblings.length - 1 ? siblings[i + 1] : undefined;
+
+// Headings marked with [toc] form the table of contents; without markers, use every h2/h3.
+const strip = (s: string) => s.replace(/\s*\[toc\]\s*/gi, "").trim();
+const marked = headings.filter((h) => /\[toc\]/i.test(h.text));
+const toc = (marked.length ? marked : headings)
+  .filter((h) => h.depth === 2 || h.depth === 3)
+  .map((h) => ({ ...h, text: strip(h.text) }));
+
+// [label, value, links to its tag page]
+const card = (
+  [
+    [t(lang, "card.platform"), d.platform, true],
+    [t(lang, "card.machine"), d.machine, false],
+    [t(lang, "card.os"), d.os, true],
+    [t(lang, "card.difficulty"), d.difficulty, true],
+  ] as [string, string | undefined, boolean][]
+).filter(([, v]) => v) as [string, string, boolean][];
+const tags = postTags(post);
+
+const altHref = translation ? postUrl(translation) : localePath(other, "/blog");
+const minutes = readingMinutes(post.body ?? "");
 ---
 
-<BaseLayout title={`${title} — HollyHack`} lang={lang} description={description ?? ""} wide={true}>
-  <Navbar />
-    <div class="mt-10 grid gap-10 lg:grid-cols-[240px_1fr] min-w-0">
-      <!-- TOC DESKTOP -->
-      <aside class="hidden lg:block">
-        {toc.length > 0 && (
-          <div class="sticky top-24 rounded-xl border border-zinc-200 p-4 text-sm dark:border-zinc-800">
-            <p class="mb-3 font-semibold text-zinc-900 dark:text-zinc-100">
-              {lang === "pl" ? "Na tej stronie" : "On this page"}
-            </p>
+<BaseLayout lang={lang} title={d.title} description={d.description} altHref={altHref} image={d.heroImage?.src} type="article">
+  <div id="progress" class="fixed inset-x-0 top-0 z-50 h-0.5 origin-left scale-x-0 bg-ink" aria-hidden="true"></div>
 
-            <ul class="space-y-2">
+  <article class="relative mx-auto max-w-3xl px-4 pt-10 sm:px-6">
+    <header>
+      {d.draft && <p class="mb-4 font-mono text-xs text-muted">[{t(lang, "post.draft")}]</p>}
+
+      <p class="font-mono text-xs text-muted">
+        <a href={localePath(lang, `/${d.category}`)} class="hover:text-ink">{t(lang, `cat.${d.category}`).toLowerCase()}</a>
+        {" · "}{formatDate(d.pubDate, lang)}
+        {" · "}{minutes} {t(lang, "post.minRead")}
+        {d.updatedDate && <>{" · "}{t(lang, "post.updated")} {formatDate(d.updatedDate, lang)}</>}
+      </p>
+
+      <h1 class="mt-2 text-2xl font-semibold leading-snug sm:text-[1.75rem]">{d.title}</h1>
+      {d.description && <p class="mt-2 text-muted">{d.description}</p>}
+
+      {card.length > 0 && (
+        <dl class="mt-5 grid grid-cols-2 overflow-hidden rounded-lg border border-line sm:grid-flow-col sm:auto-cols-fr sm:grid-cols-none">
+          {card.map(([k, v, linked], i) => (
+            <div class:list={["border-line px-4 py-3", i >= 2 && "border-t sm:border-t-0", i % 2 === 1 && "border-l", i > 0 && "sm:border-l"]}>
+              <dt class="font-mono text-[0.65rem] uppercase tracking-wider text-muted">{k}</dt>
+              <dd class="mt-1 text-sm font-semibold">
+                {linked ? (
+                  <a
+                    href={localePath(lang, `/tags/${tagSlug(v)}`)}
+                    class="inline-block rounded-full border border-line px-2.5 py-px font-mono text-xs font-medium transition hover:border-ink hover:shadow-[0_0_10px_var(--glow)]"
+                  >
+                    {v}
+                  </a>
+                ) : v}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      )}
+
+      <div class="mt-4 flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4 font-mono text-xs">
+        <span class="flex flex-wrap gap-x-2 text-muted">
+          {tags.map((tag) => (
+            <a href={localePath(lang, `/tags/${tagSlug(tag)}`)} class="hover:text-ink">#{tag.toLowerCase()}</a>
+          ))}
+        </span>
+        {translation ? (
+          <a href={postUrl(translation)} hreflang={other} lang={other} class="underline underline-offset-4 hover:no-underline">
+            {t(lang, "post.readIn")} →
+          </a>
+        ) : (
+          <span class="text-muted">{t(other, "post.noTranslation")}</span>
+        )}
+      </div>
+    </header>
+
+    <div class="mt-8">
+      <div class="min-w-0">
+        {toc.length > 0 && (
+          <details class="mb-8 border-b border-line pb-4 xl:hidden">
+            <summary class="cursor-pointer font-mono text-xs text-muted">{t(lang, "post.toc")}</summary>
+            <ol class="mt-4 space-y-2 text-sm">
               {toc.map((h) => (
                 <li class={h.depth === 3 ? "pl-4" : ""}>
+                  <a href={`#${h.slug}`} class="text-muted hover:text-ink">{h.text}</a>
+                </li>
+              ))}
+            </ol>
+          </details>
+        )}
+
+        <div class="prose max-w-none dark:prose-invert" id="post-body">
+          <slot />
+        </div>
+      </div>
+
+      {toc.length > 0 && (
+        <aside class="absolute inset-y-0 left-full hidden w-48 pt-10 xl:block">
+          <nav class="sticky top-24" aria-label={t(lang, "post.toc")}>
+            <p class="font-mono text-xs text-muted">{t(lang, "post.toc")}</p>
+            <ol class="mt-3 space-y-2 border-l border-line text-[0.8rem]" id="toc">
+              {toc.map((h) => (
+                <li>
                   <a
                     href={`#${h.slug}`}
-                    class="block leading-snug text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white"
+                    data-slug={h.slug}
+                    class:list={[
+                      "-ml-px block border-l border-transparent leading-snug text-muted transition-colors hover:text-ink",
+                      h.depth === 3 ? "pl-6" : "pl-3",
+                    ]}
                   >
                     {h.text}
                   </a>
                 </li>
               ))}
-            </ul>
-          </div>
-        )}
-      </aside>
-
-      <!-- CONTENT -->
-      <article class="min-w-0">
-        <header class="space-y-4">
-          <div class="flex items-center justify-between gap-4 flex-wrap">
-            <p class="text-sm text-zinc-500 dark:text-zinc-400">
-              <FormattedDate date={pubDate} />
-            </p>
-
-            {translatedUrl && (
-              <a
-                href={translatedUrl}
-                class="text-sm rounded-lg border border-zinc-200 px-3 py-2 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
-              >
-                {lang === "en" ? "Read in Polish →" : "Czytaj po angielsku →"}
-              </a>
-            )}
-          </div>
-
-          <h1 class="text-4xl font-bold tracking-tight">{title}</h1>
-
-          {description && (
-            <p class="text-lg text-zinc-600 dark:text-zinc-300">{description}</p>
-          )}
-
-          {tags?.length > 0 && (
-            <ul class="flex flex-wrap gap-2 pt-2">
-              {tags.map((t) => (
-                <li class="text-xs rounded-full border border-zinc-200 px-3 py-1 dark:border-zinc-800">
-                  #{t}
-                </li>
-              ))}
-            </ul>
-          )}
-        </header>
-
-        <!-- TOC MOBILE -->
-        {toc.length > 0 && (
-          <details class="lg:hidden mt-8 rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
-            <summary class="cursor-pointer font-semibold">
-              {lang === "pl" ? "Sekcje" : "Sections"}
-            </summary>
-
-            <ul class="mt-3 space-y-2 text-sm">
-              {toc.map((h) => (
-                <li class={h.depth === 3 ? "pl-4" : ""}>
-                  <a href={`#${h.slug}`} class="hover:underline">
-                    {h.text}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </details>
-        )}
-
-        <div class="mt-10 prose prose-zinc dark:prose-invert max-w-none">
-          <slot />
-        </div>
-        <script is:inline>
-          for (const el of document.querySelectorAll(".prose h2, .prose h3")) {
-            el.textContent = el.textContent.replace(/\s*\[toc\]\s*/g, "");
-          }
-        </script>
-        <div class="mt-12">
-          <a
-            href={lang === "pl" ? "/pl/blog" : "/blog"}
-            class="text-sm text-zinc-600 hover:underline dark:text-zinc-300"
-          >
-            ← {lang === "pl" ? "Wróć do bloga" : "Back to blog"}
-          </a>
-        </div>
-      </article>
+            </ol>
+          </nav>
+        </aside>
+      )}
     </div>
+
+    <footer class="mt-14">
+      <nav class="grid gap-4 border-t border-line pt-6 sm:grid-cols-2" aria-label="Posts">
+        {older ? (
+          <a href={postUrl(older)} class="group">
+            <span class="font-mono text-xs text-muted">← {t(lang, "post.prev")}</span>
+            <span class="mt-1 block text-sm font-semibold leading-snug group-hover:underline">{older.data.title}</span>
+          </a>
+        ) : <span class="hidden sm:block" />}
+        {newer && (
+          <a href={postUrl(newer)} class="group text-right">
+            <span class="font-mono text-xs text-muted">{t(lang, "post.next")} →</span>
+            <span class="mt-1 block text-sm font-semibold leading-snug group-hover:underline">{newer.data.title}</span>
+          </a>
+        )}
+      </nav>
+      <a href={localePath(lang, "/blog")} class="mt-6 inline-block font-mono text-xs text-muted hover:text-ink">
+        ← {t(lang, "post.back")}
+      </a>
+    </footer>
+  </article>
 </BaseLayout>
+
+<script define:vars={{ copy: t(lang, "code.copy"), copied: t(lang, "code.copied") }}>
+  const body = document.getElementById("post-body");
+
+  // Drop the [toc] marker from rendered headings.
+  body?.querySelectorAll("h2, h3").forEach((h) => {
+    for (const n of h.childNodes) if (n.nodeType === 3) n.textContent = n.textContent.replace(/\s*\[toc\]\s*/gi, "");
+  });
+
+  // Copy buttons on code blocks.
+  body?.querySelectorAll("pre").forEach((pre) => {
+    const wrap = document.createElement("div");
+    wrap.className = "code-wrap";
+    pre.replaceWith(wrap);
+    wrap.appendChild(pre);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "code-copy";
+    btn.textContent = copy;
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(pre.innerText);
+        btn.textContent = copied;
+        setTimeout(() => (btn.textContent = copy), 1500);
+      } catch {}
+    });
+    wrap.appendChild(btn);
+  });
+
+  // Reading progress + active TOC entry.
+  const bar = document.getElementById("progress");
+  const links = [...document.querySelectorAll("#toc a")];
+  const targets = links.map((a) => document.getElementById(a.dataset.slug)).filter(Boolean);
+  const onScroll = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    if (bar) bar.style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max) : 0})`;
+    let current = targets[0];
+    for (const el of targets) if (el.getBoundingClientRect().top < 140) current = el;
+    links.forEach((a) => {
+      const on = current && a.dataset.slug === current.id;
+      a.classList.toggle("text-ink", on);
+      a.classList.toggle("border-ink", on);
+      a.classList.toggle("text-muted", !on);
+    });
+  };
+  addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+</script>

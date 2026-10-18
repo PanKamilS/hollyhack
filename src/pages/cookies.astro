@@ -1,21 +1,55 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Navbar from "../components/Navbar.astro";
 ---
 
-<BaseLayout title="Cookies — HollyHack" lang="en">
-  <Navbar />
+<BaseLayout title="Cookies" lang="en">
+  <article class="prose mx-auto max-w-3xl px-4 pt-10 sm:px-6 dark:prose-invert prose-h1:text-xl prose-h1:font-semibold">
+    <h1>Cookies and browser storage</h1>
+    <p class="text-sm text-muted">Last updated: 18 October 2026</p>
 
-  <article class="mt-10 prose prose-zinc dark:prose-invert max-w-none">
-    <h1>Cookies</h1>
-
+    <h2>Does this site use cookies?</h2>
     <p>
-      This site uses necessary cookies/storage to provide basic functionality (e.g., remembering your theme or consent choice).
+      No. hollyhack.org does not set cookies and does not use analytics, ads, tracking pixels or content embedded from other
+      services. Fonts, scripts and images are loaded from this domain only.
     </p>
 
-    <h2>Your choices</h2>
+    <h2>What is stored in your browser</h2>
     <p>
-      You can accept or reject optional cookies via the cookie banner. You can also clear your browser storage to reset your choice.
+      The site stores just two values in your browser's local storage (<code>localStorage</code>), only to remember your
+      settings:
+    </p>
+    <table>
+      <thead>
+        <tr><th>Key</th><th>Purpose</th><th>Kept for</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>theme</code></td><td>your chosen theme (light or dark)</td><td>until you clear your browser data</td></tr>
+        <tr><td><code>cookie-consent</code></td><td>that you closed the cookie notice</td><td>until you clear your browser data</td></tr>
+      </tbody>
+    </table>
+    <p>
+      These values are never sent to a server or shared with anyone, and they cannot identify you. Storing information that
+      is strictly necessary for a service you asked for (such as remembering your theme) does not require consent under the
+      EU ePrivacy rules.
+    </p>
+
+    <h2>Hosting</h2>
+    <p>
+      The site is hosted on Cloudflare Pages. In exceptional cases Cloudflare may set a technical cookie used only for
+      security, for example <code>__cf_bm</code> for bot protection (valid for up to 30 minutes). Such a cookie is strictly
+      necessary for the site to work and is not used for tracking.
+    </p>
+
+    <h2>How to remove stored data</h2>
+    <p>
+      You can remove these values at any time by clearing site data in your browser settings. The site keeps working, and
+      the theme falls back to your system setting.
+    </p>
+
+    <h2>More information</h2>
+    <p>
+      For details on personal data, see the <a href="/privacy">Privacy Policy</a>. Questions:
+      <a href="mailto:kamil@powiem.im">kamil@powiem.im</a>.
     </p>
   </article>
 </BaseLayout>

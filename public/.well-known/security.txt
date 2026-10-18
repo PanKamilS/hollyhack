@@ -1,4 +1,6 @@
-Contact: pan_kamil.s@pm.me
+Contact: mailto:pan_kamil.s@pm.me
 Preferred-Languages: en, pl
 Policy: https://hollyhack.org/privacy
 Acknowledgments: https://hollyhack.org/
+Expires: 2027-10-18T00:00:00.000Z
+Canonical: https://hollyhack.org/.well-known/security.txt

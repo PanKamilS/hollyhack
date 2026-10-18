@@ -1,0 +1,93 @@
+---
+import { t, type Lang } from "../i18n/ui";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const cmd = "cat README";
+---
+
+<section class="terminal" aria-label="HollyHack">
+  <p><span class="t-green">┌──(</span><span class="t-user">hollyhack㉿kali</span><span class="t-green">)-[</span><span class="t-path">~</span><span class="t-green">]</span></p>
+  <p>
+    <span class="t-green">└─</span><span class="t-user">$</span>
+    <span class="t-typed" style={`--chars: ${cmd.length}`}>{cmd}</span>
+  </p>
+  <p class="t-out">{t(lang, "home.lead")}</p>
+  <p class="t-out t-dim">{t(lang, "home.topics")}</p>
+  <p class="t-out"><span class="t-green">┌──(</span><span class="t-user">hollyhack㉿kali</span><span class="t-green">)-[</span><span class="t-path">~</span><span class="t-green">]</span></p>
+  <p class="t-out"><span class="t-green">└─</span><span class="t-user">$</span> <span class="t-cursor" aria-hidden="true"></span></p>
+</section>
+
+<style>
+  .terminal {
+    --t-green: #4ade80;
+    --t-blue: #60a5fa;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: #e5e5e5;
+    background: #0a0a0a;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+  }
+  .terminal p {
+    white-space: pre-wrap;
+  }
+  .t-green {
+    color: var(--t-green);
+  }
+  .t-user {
+    color: var(--t-blue);
+    font-weight: 500;
+  }
+  .t-path {
+    color: #f5f5f5;
+  }
+  .t-dim {
+    color: #8a8a8a;
+  }
+
+  /* Command is typed out, then the output appears. */
+  .t-typed {
+    display: inline-block;
+    vertical-align: bottom;
+    white-space: nowrap;
+    overflow: hidden;
+    width: calc(var(--chars) * 1ch);
+    animation: type 0.9s steps(var(--chars)) 0.3s both;
+  }
+  .t-out {
+    animation: show 0s 1.35s both;
+  }
+  .t-cursor {
+    display: inline-block;
+    width: 0.6em;
+    height: 1.05em;
+    vertical-align: text-bottom;
+    background: var(--t-green);
+    animation: blink 1s steps(1) infinite;
+  }
+
+  @keyframes type {
+    from { width: 0; }
+  }
+  @keyframes show {
+    from { visibility: hidden; }
+  }
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .t-typed,
+    .t-out,
+    .t-cursor {
+      animation: none;
+    }
+  }
+</style>

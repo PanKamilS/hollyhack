@@ -6,6 +6,10 @@ tags: ["OSCP", "OFFSEC PG", "WRITEUP", "WEBPENTEST"]
 lang: pl
 heroImage: '../../assets/pelican_theme.png'
 draft: false
+category: writeups
+platform: "OffSec Proving Grounds"
+machine: "Pelican"
+translationKey: pelican
 ---
 
 ## Pelican - Opis

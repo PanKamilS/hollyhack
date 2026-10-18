@@ -1,22 +1,55 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import Navbar from "../../components/Navbar.astro";
 ---
 
-<BaseLayout title="Cookies — HollyHack" lang="pl">
-  <Navbar />
+<BaseLayout title="Cookies" lang="pl">
+  <article class="prose mx-auto max-w-3xl px-4 pt-10 sm:px-6 dark:prose-invert prose-h1:text-xl prose-h1:font-semibold">
+    <h1>Cookies i pamięć przeglądarki</h1>
+    <p class="text-sm text-muted">Ostatnia aktualizacja: 18 października 2026 r.</p>
 
-  <article class="mt-10 prose prose-zinc dark:prose-invert max-w-none">
-    <h1>Cookies</h1>
-
+    <h2>Czy strona używa cookies?</h2>
     <p>
-      Strona używa niezbędnych cookies/pamięci przeglądarki do podstawowego działania (np. zapamiętanie motywu lub wyboru z bannera).
-      Jedna z nielicznych stron, dla której jesteś czytelnikiem nie towarem - nie zbieram i nie przetwarzam komercyjnie Twoich danych.
+      Nie. Serwis hollyhack.org nie ustawia plików cookies, nie używa narzędzi analitycznych, reklam, pikseli śledzących
+      ani treści osadzanych z zewnętrznych serwisów. Czcionki, skrypty i obrazy są ładowane wyłącznie z tej domeny.
     </p>
 
-    <h2>Twoje wybory</h2>
+    <h2>Co jest zapisywane w przeglądarce</h2>
     <p>
-      Możesz zaakceptować lub odrzucić opcjonalne cookies w bannerze. Możesz też wyczyścić dane przeglądarki, aby zresetować wybór.
+      Strona zapisuje w pamięci lokalnej przeglądarki (<code>localStorage</code>) tylko dwie informacje, wyłącznie po to,
+      żeby zapamiętać Twoje ustawienia:
+    </p>
+    <table>
+      <thead>
+        <tr><th>Klucz</th><th>Cel</th><th>Okres przechowywania</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>theme</code></td><td>wybrany motyw (jasny lub ciemny)</td><td>do czasu wyczyszczenia danych przeglądarki</td></tr>
+        <tr><td><code>cookie-consent</code></td><td>informacja, że komunikat o cookies został zamknięty</td><td>do czasu wyczyszczenia danych przeglądarki</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Te dane nigdy nie są wysyłane na serwer ani nikomu udostępniane. Nie pozwalają Cię zidentyfikować. Zapisywanie
+      informacji niezbędnych do świadczenia usługi, o którą prosisz (np. zapamiętania wybranego motywu), nie wymaga
+      zgody zgodnie z przepisami Prawa komunikacji elektronicznej i dyrektywy ePrivacy.
+    </p>
+
+    <h2>Hosting</h2>
+    <p>
+      Strona jest hostowana w Cloudflare Pages. Cloudflare może w wyjątkowych sytuacjach ustawić techniczne cookie służące
+      wyłącznie bezpieczeństwu, np. <code>__cf_bm</code> do ochrony przed botami (ważne do 30 minut). Takie cookie jest
+      niezbędne do działania strony i nie służy do śledzenia.
+    </p>
+
+    <h2>Jak usunąć zapisane dane</h2>
+    <p>
+      Możesz w każdej chwili usunąć te informacje, czyszcząc dane witryny w ustawieniach przeglądarki. Strona będzie
+      działać dalej, a motyw wróci do ustawień Twojego systemu.
+    </p>
+
+    <h2>Więcej informacji</h2>
+    <p>
+      Szczegóły dotyczące przetwarzania danych osobowych znajdziesz w <a href="/pl/privacy">polityce prywatności</a>.
+      Pytania: <a href="mailto:kamil@powiem.im">kamil@powiem.im</a>.
     </p>
   </article>
 </BaseLayout>

@@ -1,39 +1,22 @@
 ---
-const isPL = Astro.url.pathname === "/pl" || Astro.url.pathname.startsWith("/pl/");
-const privacyHref = isPL ? "/pl/privacy" : "/privacy";
-const cookiesHref = isPL ? "/pl/cookies" : "/cookies";
+import { langFromPath, localePath } from "../i18n/ui";
+
+const lang = langFromPath(Astro.url.pathname);
+const pl = lang === "pl";
 ---
 
-<div
-  id="cookie-banner"
-  class="fixed bottom-4 left-4 right-4 mx-auto max-w-3xl hidden"
->
-  <div class="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-    <p class="text-sm text-zinc-700 dark:text-zinc-300">
-      {isPL
-        ? "Używam niezbędnych plików cookies do działania strony. Opcjonalnie mogę używać analityki. Możesz zaakceptować lub odrzucić."
-        : "I use necessary cookies to make this site work. Optionally, I may use analytics. You can accept or reject."}
+<div id="cookie-banner" class="fixed inset-x-4 bottom-4 z-50 mx-auto hidden max-w-xl" role="dialog" aria-live="polite">
+  <div class="rounded-lg border border-ink bg-paper p-5 shadow-[4px_4px_0_0_var(--ink)]">
+    <p class="text-sm leading-relaxed">
+      {pl
+        ? "Ta strona nie używa cookies ani analityki. Zapamiętuje w przeglądarce tylko Twoje ustawienia, np. motyw."
+        : "This site uses no cookies and no analytics. It only remembers your settings, such as the theme, in your browser."}
     </p>
-
-    <p class="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
-      <a class="hover:underline" href={privacyHref}>{isPL ? "Polityka prywatności" : "Privacy Policy"}</a>
-      <span class="px-2">·</span>
-      <a class="hover:underline" href={cookiesHref}>{isPL ? "Cookies" : "Cookies"}</a>
-    </p>
-
-    <div class="mt-4 flex gap-2 flex-wrap">
-      <button
-        id="cookie-accept"
-        class="rounded-lg bg-zinc-900 px-4 py-2 text-sm text-white hover:opacity-90 dark:bg-white dark:text-zinc-900"
-      >
-        {isPL ? "Akceptuję" : "Accept"}
-      </button>
-      <button
-        id="cookie-reject"
-        class="rounded-lg border border-zinc-200 px-4 py-2 text-sm hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
-      >
-        {isPL ? "Odrzucam" : "Reject"}
-      </button>
+    <div class="mt-4 flex flex-wrap items-center gap-2">
+      <button id="cookie-ok" class="rounded-full bg-ink px-4 py-2 text-sm text-paper hover:opacity-85">OK</button>
+      <a class="ml-auto text-xs text-muted underline-offset-2 hover:text-ink hover:underline" href={localePath(lang, "/cookies")}>
+        {pl ? "Więcej" : "Details"}
+      </a>
     </div>
   </div>
 </div>
@@ -41,19 +24,17 @@ const cookiesHref = isPL ? "/pl/cookies" : "/cookies";
 <script>
   const key = "cookie-consent";
   const banner = document.getElementById("cookie-banner");
-  const accept = document.getElementById("cookie-accept");
-  const reject = document.getElementById("cookie-reject");
+  let seen: string | null = "unknown";
+  try {
+    seen = localStorage.getItem(key);
+  } catch {}
+  if (!seen) banner?.classList.remove("hidden");
 
-  const existing = localStorage.getItem(key);
-  if (!existing) banner?.classList.remove("hidden");
-
-  accept?.addEventListener("click", () => {
-    localStorage.setItem(key, "accepted");
+  const close = (value: string) => {
+    try {
+      localStorage.setItem(key, value);
+    } catch {}
     banner?.classList.add("hidden");
-  });
-
-  reject?.addEventListener("click", () => {
-    localStorage.setItem(key, "rejected");
-    banner?.classList.add("hidden");
-  });
+  };
+  document.getElementById("cookie-ok")?.addEventListener("click", () => close("seen"));
 </script>

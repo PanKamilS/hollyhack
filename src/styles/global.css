@@ -1,6 +1,207 @@
 @import "tailwindcss";
 @plugin '@tailwindcss/typography';
 @custom-variant dark (&:where(.dark, .dark *));
+
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/400-italic.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+@theme {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+
+  --color-paper: var(--paper);
+  --color-raised: var(--raised);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+}
+
+/* Black & white only. Light = ink on paper, dark = inverted. */
+:root {
+  --paper: #ffffff;
+  --raised: #f5f5f5;
+  --ink: #0a0a0a;
+  --muted: #5e5e5e;
+  --line: #e2e2e2;
+  --code-bg: #0a0a0a;
+  --code-ink: #f2f2f2;
+  --glow: rgba(0, 0, 0, 0.18);
+}
+
+.dark {
+  --paper: #0a0a0a;
+  --raised: #141414;
+  --ink: #f2f2f2;
+  --muted: #9b9b9b;
+  --line: #262626;
+  --code-bg: #141414;
+  --code-ink: #f2f2f2;
+  --glow: rgba(255, 255, 255, 0.35);
+}
+
+html {
+  scroll-padding-top: 6rem;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* ---------- Pill links (category filter) ---------- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 9999px;
+  padding: 0.35rem 0.9rem;
+  color: var(--muted);
+  transition: color 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+.pill:hover,
+.pill:focus-visible {
+  color: var(--ink);
+  border-color: var(--ink);
+  box-shadow: 0 0 0 1px var(--ink), 0 0 14px var(--glow);
+}
+.pill-active {
+  color: var(--ink);
+  border-color: var(--ink);
+  background: var(--raised);
+}
+
+/* ---------- Long-form posts ---------- */
+.prose {
+  --tw-prose-body: var(--ink);
+  --tw-prose-headings: var(--ink);
+  --tw-prose-lead: var(--muted);
+  --tw-prose-links: var(--ink);
+  --tw-prose-bold: var(--ink);
+  --tw-prose-counters: var(--muted);
+  --tw-prose-bullets: var(--muted);
+  --tw-prose-hr: var(--line);
+  --tw-prose-quotes: var(--ink);
+  --tw-prose-quote-borders: var(--ink);
+  --tw-prose-captions: var(--muted);
+  --tw-prose-code: var(--ink);
+  --tw-prose-pre-code: var(--code-ink);
+  --tw-prose-pre-bg: var(--code-bg);
+  --tw-prose-th-borders: var(--ink);
+  --tw-prose-td-borders: var(--line);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.prose :where(h2, h3, h4) {
+  font-weight: 600;
+}
+.prose h2 {
+  margin-top: 2.2em;
+  margin-bottom: 0.7em;
+  font-size: 1.3em;
+}
+.prose h3 {
+  margin-top: 1.8em;
+  font-size: 1.1em;
+}
+
+.prose a {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.prose a:hover {
+  text-decoration-thickness: 2px;
+}
+
+.prose :where(code):not(:where(pre code)) {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  font-weight: 400;
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+.prose :where(code):not(:where(pre code))::before,
+.prose :where(code):not(:where(pre code))::after {
+  content: none;
+}
+
+.prose pre {
+  background-color: var(--code-bg) !important;
+  color: var(--code-ink) !important;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.65;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 1.1rem 1.25rem;
+}
+
+.prose img {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.prose table {
+  font-size: 0.95em;
+}
+.prose thead th {
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.prose blockquote {
+  font-style: normal;
+  font-weight: 400;
+  background: var(--raised);
+  border-left-width: 3px;
+  padding: 0.9em 1.2em;
+}
+.prose blockquote p:first-of-type::before,
+.prose blockquote p:last-of-type::after {
+  content: none;
+}
+
+/* Copy button added to code blocks by BlogPost.astro */
+.code-wrap {
+  position: relative;
+}
+.code-copy {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--code-ink);
+  background: transparent;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.code-wrap:hover .code-copy,
+.code-copy:focus-visible {
+  opacity: 1;
+}
+@media (hover: none) {
+  .code-copy {
+    opacity: 1;
+  }
+}
+
 /* Hide [toc] marker inside rendered headings */
 .prose h1 .toc-marker,
 .prose h2 .toc-marker,

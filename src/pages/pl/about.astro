@@ -1,15 +1,19 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import Navbar from "../../components/Navbar.astro";
 ---
 
-<BaseLayout title="O mnie — HollyHack" lang="pl">
-  <Navbar />
-
-  <section class="mt-10">
-    <h1 class="text-3xl font-bold tracking-tight">O mnie</h1>
-    <p class="mt-4 text-zinc-600 dark:text-zinc-300">
-      Krótka bio, obszary i linki.
+<BaseLayout title="O mnie" lang="pl">
+  <article class="prose mx-auto max-w-3xl px-4 pt-10 sm:px-6 dark:prose-invert">
+    <h1 class="text-xl font-semibold">O mnie</h1>
+    <p class="lead">
+      HollyHack to miejsce, w którym dokumentuję naukę bezpieczeństwa ofensywnego: rozwiązania wycofanych maszyn z
+      legalnych platform szkoleniowych, notatki z nauki i krótkie komentarze do nowinek z branży.
     </p>
-  </section>
+    <p>
+      Każdy writeup dotyczy maszyny oficjalnie wycofanej przez platformę, więc publikacja rozwiązania jest dozwolona.
+      Wpisy są dostępne po polsku i angielsku.
+    </p>
+    <h2>Kontakt</h2>
+    <p>Na razie nic — może kiedyś coś dodam, jak najdzie mnie ochota.</p>
+  </article>
 </BaseLayout>

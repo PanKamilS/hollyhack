@@ -1,32 +1,104 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Navbar from "../components/Navbar.astro";
 ---
 
-<BaseLayout title="Privacy Policy — HollyHack" lang="en">
-  <Navbar />
-
-  <article class="mt-10 prose prose-zinc dark:prose-invert max-w-none">
+<BaseLayout title="Privacy Policy" lang="en">
+  <article class="prose mx-auto max-w-3xl px-4 pt-10 sm:px-6 dark:prose-invert prose-h1:text-xl prose-h1:font-semibold">
     <h1>Privacy Policy</h1>
+    <p class="text-sm text-muted">Last updated: 18 October 2026</p>
 
     <p>
-      This website publishes technical articles and walkthroughs. I do not intentionally collect personal data unless you
-      contact me directly.
+      This policy explains what personal data is processed when you use hollyhack.org, in line with Article 13 of
+      Regulation (EU) 2016/679 (General Data Protection Regulation, GDPR).
     </p>
 
-    <h2>Contact</h2>
+    <h2>1. Controller</h2>
     <p>
-      If you contact me (e.g., via email), I will only use your message to respond.
+      The data controller is Kamil, author of HollyHack. For any question about personal data, contact
+      <a href="mailto:kamil@powiem.im">kamil@powiem.im</a>.
     </p>
 
-    <h2>Analytics</h2>
+    <h2>2. What data is processed</h2>
     <p>
-      If analytics are enabled in the future, they will be used to understand traffic in aggregate.
+      This site is a static blog. It has no user accounts, forms, comments, newsletter, ads or analytics. I do not collect
+      data for marketing and I do not profile readers.
+    </p>
+    <p>Personal data may be processed in two situations only:</p>
+    <ul>
+      <li>
+        <strong>Server logs.</strong> On every visit, the hosting provider's server automatically records technical data:
+        IP address, date and time of the request, the page requested, browser and operating system type, and the referring
+        page. The site is hosted on Cloudflare Pages. This data is used only to deliver the site, keep it secure and prevent abuse.
+      </li>
+      <li>
+        <strong>Email.</strong> If you write to the address above, I process your email address, your message and any other
+        data you include in order to reply.
+      </li>
+    </ul>
+
+    <h2>3. Legal basis</h2>
+    <ul>
+      <li>
+        Server logs: Article 6(1)(f) GDPR, the controller's legitimate interest in providing the site and keeping it secure.
+      </li>
+      <li>Email: Article 6(1)(f) GDPR, the legitimate interest in replying to your message.</li>
+    </ul>
+
+    <h2>4. Recipients</h2>
+    <p>
+      Server log data is processed by Cloudflare, Inc. (101 Townsend St, San Francisco, CA 94107, USA), the provider of
+      Cloudflare Pages, acting on my behalf as a processor
+      (<a href="https://www.cloudflare.com/privacypolicy/">Cloudflare privacy policy</a>). Emails are stored by
+      my email provider. I do not sell or share data with anyone else unless required by law.
     </p>
 
-    <h2>Changes</h2>
+    <h2>5. Transfers outside the EEA</h2>
     <p>
-      This policy may be updated from time to time.
+      Cloudflare may process data outside the European Economic Area, including in the USA. Cloudflare participates in the
+      EU-US Data Privacy Framework, and transfers are based on the European Commission's adequacy decision and on standard
+      contractual clauses. If the email provider processes data outside the EEA, the same safeguards apply.
+    </p>
+
+    <h2>6. Retention</h2>
+    <ul>
+      <li>Server logs: for the period set by Cloudflare in its data retention rules.</li>
+      <li>Email: for as long as needed to reply and continue the conversation.</li>
+    </ul>
+
+    <h2>7. Your rights</h2>
+    <p>You have the right to:</p>
+    <ul>
+      <li>access your data and receive a copy (Article 15 GDPR),</li>
+      <li>have it corrected (Article 16 GDPR),</li>
+      <li>have it erased (Article 17 GDPR),</li>
+      <li>restrict processing (Article 18 GDPR),</li>
+      <li>object to processing based on legitimate interest (Article 21 GDPR).</li>
+    </ul>
+    <p>
+      To exercise these rights, write to <a href="mailto:kamil@powiem.im">kamil@powiem.im</a>. You can also lodge a
+      complaint with a supervisory authority, in Poland the President of the Personal Data Protection Office (UODO),
+      ul. Stawki 2, 00-193 Warsaw (<a href="https://uodo.gov.pl">uodo.gov.pl</a>), or the authority in your own EU country.
+    </p>
+
+    <h2>8. Voluntary data and profiling</h2>
+    <p>
+      Providing data by email is voluntary, but I cannot reply without your email address. Data is not used for automated
+      decision-making or profiling.
+    </p>
+
+    <h2>9. Cookies and browser storage</h2>
+    <p>
+      This site does not use cookies. It only stores your settings in your browser. See the
+      <a href="/cookies">cookie notice</a> for details.
+    </p>
+
+    <h2>10. External links</h2>
+    <p>Posts may link to other websites. Their own privacy policies apply once you leave this site.</p>
+
+    <h2>11. Changes</h2>
+    <p>
+      This policy may be updated, for example after a change of hosting or when new features are added. The
+      current version is always on this page, with the date of the last change at the top.
     </p>
   </article>
 </BaseLayout>

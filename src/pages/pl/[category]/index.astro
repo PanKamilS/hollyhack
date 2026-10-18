@@ -1,0 +1,14 @@
+---
+import ListView from "../../../views/ListView.astro";
+import { t } from "../../../i18n/ui";
+import { CATEGORIES, getPosts, type Category } from "../../../lib/posts";
+
+export function getStaticPaths() {
+  return CATEGORIES.map((category) => ({ params: { category } }));
+}
+
+const category = Astro.params.category as Category;
+const posts = await getPosts("pl", category);
+---
+
+<ListView lang="pl" title={t("pl", `cat.${category}`)} lead={t("pl", `cat.${category}.lead`)} posts={posts} active={category} />

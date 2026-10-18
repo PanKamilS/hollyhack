@@ -1,0 +1,47 @@
+---
+import { Image } from "astro:assets";
+import { formatDate, t } from "../i18n/ui";
+import { postTags, postUrl, type Post } from "../lib/posts";
+
+interface Props {
+  post: Post;
+  showCategory?: boolean;
+}
+
+const { post, showCategory = true } = Astro.props;
+const { lang, title, description, pubDate, category, draft, heroImage } = post.data;
+const tags = postTags(post);
+---
+
+<article
+  class:list={[
+    "group relative grid gap-1 border-b border-line py-4 sm:gap-4",
+    heroImage ? "grid-cols-[1fr_6rem] sm:grid-cols-[6.5rem_1fr_8rem]" : "sm:grid-cols-[6.5rem_1fr]",
+  ]}
+>
+  <time datetime={pubDate.toISOString()} class="col-span-full pt-0.5 font-mono text-xs text-muted sm:col-span-1">
+    {formatDate(pubDate, lang)}
+  </time>
+
+  <div class="min-w-0">
+    <h2 class="text-base font-semibold leading-snug">
+      <a href={postUrl(post)} class="underline-offset-4 after:absolute after:inset-0 group-hover:underline">{title}</a>
+      {draft && <span class="ml-2 align-middle font-mono text-[0.65rem] font-normal text-muted">[draft]</span>}
+    </h2>
+    {description && <p class="mt-1 line-clamp-2 text-sm leading-relaxed text-muted">{description}</p>}
+    <p class="mt-1.5 flex flex-wrap gap-x-2 font-mono text-[0.7rem] text-muted">
+      {showCategory && <span>{t(lang, `cat.${category}`).toLowerCase()}</span>}
+      {tags.slice(0, 5).map((tag) => <span>#{tag.toLowerCase()}</span>)}
+    </p>
+  </div>
+
+  {heroImage && (
+    <Image
+      src={heroImage}
+      alt=""
+      widths={[192, 384]}
+      sizes="128px"
+      class="aspect-[4/3] w-full self-start rounded-md border border-line object-cover transition group-hover:border-ink"
+    />
+  )}
+</article>
