@@ -9,16 +9,11 @@ const pl = lang === "pl";
   <div class="rounded-lg border border-ink bg-paper p-5 shadow-[4px_4px_0_0_var(--ink)]">
     <p class="text-sm leading-relaxed">
       {pl
-        ? "Strona zapamiętuje w przeglądarce tylko Twoje ustawienia (motyw, ten wybór). Nie śledzę Cię i nie sprzedaję danych."
-        : "This site only stores your settings (theme, this choice) in your browser. No tracking, no selling data."}
+        ? "Ta strona nie używa cookies ani analityki. Zapamiętuje w przeglądarce tylko Twoje ustawienia, np. motyw."
+        : "This site uses no cookies and no analytics. It only remembers your settings, such as the theme, in your browser."}
     </p>
     <div class="mt-4 flex flex-wrap items-center gap-2">
-      <button id="cookie-accept" class="rounded-full bg-ink px-4 py-2 text-sm text-paper hover:opacity-85">
-        {pl ? "Akceptuję" : "Accept"}
-      </button>
-      <button id="cookie-reject" class="rounded-full border border-line px-4 py-2 text-sm hover:border-ink">
-        {pl ? "Odrzucam" : "Reject"}
-      </button>
+      <button id="cookie-ok" class="rounded-full bg-ink px-4 py-2 text-sm text-paper hover:opacity-85">OK</button>
       <a class="ml-auto text-xs text-muted underline-offset-2 hover:text-ink hover:underline" href={localePath(lang, "/cookies")}>
         {pl ? "Więcej" : "Details"}
       </a>
@@ -41,6 +36,5 @@ const pl = lang === "pl";
     } catch {}
     banner?.classList.add("hidden");
   };
-  document.getElementById("cookie-accept")?.addEventListener("click", () => close("accepted"));
-  document.getElementById("cookie-reject")?.addEventListener("click", () => close("rejected"));
+  document.getElementById("cookie-ok")?.addEventListener("click", () => close("seen"));
 </script>
