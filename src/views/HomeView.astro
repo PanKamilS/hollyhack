@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import CategoryTabs from "../components/CategoryTabs.astro";
 import PostItem from "../components/PostItem.astro";
+import TerminalHero from "../components/TerminalHero.astro";
 import { t, type Lang } from "../i18n/ui";
 import { getPosts } from "../lib/posts";
 
@@ -15,12 +16,7 @@ const posts = await getPosts(lang);
 
 <BaseLayout lang={lang}>
   <div class="mx-auto max-w-3xl px-4 pt-10 sm:px-6">
-    <section class="border-b border-line pb-6">
-      <p class="font-mono text-sm">
-        {t(lang, "home.topics").split("|").join(" · ")}
-      </p>
-      <p class="mt-2 text-sm leading-relaxed text-muted">{t(lang, "home.lead")}</p>
-    </section>
+    <TerminalHero lang={lang} />
 
     <div class="mt-6">
       <CategoryTabs lang={lang} />
